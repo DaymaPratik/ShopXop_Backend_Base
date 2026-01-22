@@ -1,44 +1,52 @@
 import { Entity, Column } from "typeorm";
 import { BaseEntity } from "./BaseEntity";
 
+export enum UserStatus {
+  ACTIVE = "ACTIVE",
+  BLOCKED = "BLOCKED"
+}
+
+export enum UserType {
+  BUYER="BUYER",
+  SELLER="SELLER"
+}
+
+
 @Entity("users")
 export class UserEntity extends BaseEntity {
 
-  @Column()
-  first_name: string;
-
-  @Column()
-  last_name: string;
-
-  @Column()
-  name: string;
-
- @Column({ unique: true })
-  phone: string; 
+  @Column({ name: "user_name" })
+  user_name: string;
 
   @Column({ unique: true })
   email: string;
 
-  @Column()
-  password: string;
+  @Column({ name: "mobile_number", unique: true })
+  mobile_number: string;
+
+  @Column({ name: "profile_image", nullable: true })
+  profile_image?: string;
+
+  @Column({
+    type: "enum",
+    enum: UserType,
+  })
+  user_type: UserType;
+
+  @Column({
+    type: "enum",
+    enum: UserStatus,
+    default: UserStatus.ACTIVE,
+  })
+  status: UserStatus;
+
 
   @Column()
-  role_id: number;
+  city: string;
 
   @Column()
-  user_type: string;
+  zip_code: string;
 
-   @Column()
-  number_of_orders: number=0;
-
-  @Column({ nullable: true })
-  otp?: string;
-
-  @Column({ nullable: true })
-  otp_expiry?: Date;
-
-  
-  @Column({ nullable: true })
-  password_reset_at?: Date;  
-
+  @Column()
+  country_id: string;
 }

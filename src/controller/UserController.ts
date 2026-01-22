@@ -6,7 +6,7 @@ import UserService from "../services/UserService";
 import { GenericResponse } from "../core/GenericResponse";
 import { StatusCode, ResponseStatus } from "../core/config";
 import { validationMiddleware } from "../middlewares/validationMiddleware";
-import { UserDto } from "../databse/repository/user/user.dto";
+import { RegisterUserDto, UserDto } from "../databse/repository/user/user.dto";
 
 export class UserController extends BaseController<UserService> {
   constructor(
@@ -15,10 +15,10 @@ export class UserController extends BaseController<UserService> {
   ) {
     super(path, service);
 
-    this.router.post(`${this.path}/register`,validationMiddleware(UserDto), this.register);
+    this.router.post(`${this.path}/register`,validationMiddleware(RegisterUserDto), this.register);
     this.router.post(`${this.path}/login`, this.login);
-    this.router.post(`${this.path}/forgot-password`, this.forgotPassword);
-    this.router.post(`${this.path}/reset-password`, this.resetPassword);
+    // this.router.post(`${this.path}/forgot-password`, this.forgotPassword);
+    // this.router.post(`${this.path}/reset-password`, this.resetPassword);
   }
 
   private register = async (req: Request, res: Response) => {
@@ -46,24 +46,24 @@ export class UserController extends BaseController<UserService> {
     res.status(ResponseStatus.SUCCESS).send(response);
   };
 
-    private forgotPassword = async (req: Request, res: Response) => {
-    const result = await this.service.forgotPassword(req.body);
-    const response = new GenericResponse();
-    response.setStatus(StatusCode.SUCCESS);
-    response.setMsg("OTP sent successfully");
-    response.setData(result, req.originalUrl);
+  //   private forgotPassword = async (req: Request, res: Response) => {
+  //   const result = await this.service.forgotPassword(req.body);
+  //   const response = new GenericResponse();
+  //   response.setStatus(StatusCode.SUCCESS);
+  //   response.setMsg("OTP sent successfully");
+  //   response.setData(result, req.originalUrl);
 
-    res.status(ResponseStatus.SUCCESS).send(response);
-  };
+  //   res.status(ResponseStatus.SUCCESS).send(response);
+  // };
 
-  private resetPassword = async (req: Request, res: Response) => {
-    const result = await this.service.resetPassword(req.body);
-    const response = new GenericResponse();
-    response.setStatus(StatusCode.SUCCESS);
-    response.setMsg("Password reset successfully");
-    response.setData(result, req.originalUrl);
-    res.status(ResponseStatus.SUCCESS).send(response);
-  };
+  // private resetPassword = async (req: Request, res: Response) => {
+  //   const result = await this.service.resetPassword(req.body);
+  //   const response = new GenericResponse();
+  //   response.setStatus(StatusCode.SUCCESS);
+  //   response.setMsg("Password reset successfully");
+  //   response.setData(result, req.originalUrl);
+  //   res.status(ResponseStatus.SUCCESS).send(response);
+  // };
 
 }
 

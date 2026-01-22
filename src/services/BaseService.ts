@@ -55,6 +55,14 @@ export abstract class BaseService<T extends ObjectLiteral> {
     };
   }
 
+
+  public getAllWithoutPagination = async (): Promise<T[]> => {
+  return this.repository.find({
+    where: { is_deleted: 0 } as any,
+    order: { created_at: "ASC" } as any,
+  });
+ };
+
   protected applyGlobalSearch(
     records: T[],
     search: string
@@ -123,7 +131,7 @@ protected async createPostProcess(
 
     const [records, totalRecords] =
       await this.repository.findAndCount({
-        where: { is_delete: false } as any,
+        where: { is_deleted: 0 } as any,
         skip: (pageNumber - 1) * pageSize,
         take: pageSize,
         order: { created_at: "DESC" } as any,
@@ -144,7 +152,7 @@ protected async createPostProcess(
     }
 
     const record = await this.repository.findOne({
-      where: { id, is_delete: false } as any,
+      where: { id, is_deleted: 0 } as any,
     });
 
     if (!record) {
@@ -164,7 +172,7 @@ protected async createPostProcess(
           const objectId = ObjectId.createFromHexString(String(id));
 
           const existing = await repo.findOne({
-            where: { _id: objectId, is_delete: false } as any,
+            where: { _id: objectId, is_deleted: 0 } as any,
           });
 
           if (!existing) {
@@ -227,7 +235,7 @@ protected async createPostProcess(
 public delete = async (id: number | string): Promise<boolean> => {
   return Transaction(async (queryRunner) => {
     const repo = this.getRepository(queryRunner);
-    let whereClause: any = { is_delete: false };
+    let whereClause: any = { is_deleted: 0 };
   
     if (typeof id === 'string' && /^[0-9a-fA-F]{24}$/.test(id)) {
       whereClause._id = new ObjectId(id);
@@ -243,7 +251,7 @@ public delete = async (id: number | string): Promise<boolean> => {
       throw new ErrorCodeApiError("E10039");
     }
     const preProcessedRecord = await this.deletePreProcess(record, queryRunner);
-    (preProcessedRecord as any).is_delete = true;
+    (preProcessedRecord as any).is_deleted = 1;
     await repo.save(preProcessedRecord);
     await this.deletePostProcess(preProcessedRecord, queryRunner);
     
@@ -267,8 +275,8 @@ protected async deletePostProcess(record: T, queryRunner?: any): Promise<T> {
     }
 
     await this.repository.updateMany(
-      { id: { $in: ids }, is_delete: false } as any,
-      { $set: { is_delete: true } } as any
+      { id: { $in: ids }, is_deleted: 0 } as any,
+      { $set: { is_deleted: 1 } } as any
     );
 
     return true;

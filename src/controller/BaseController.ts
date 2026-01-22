@@ -35,8 +35,25 @@ export abstract class BaseController<
     this.router.post(`${this.path}/savemulti`,authMiddleware, ...(this.dto ? [validationMiddleware(this.dto)] : []),this.saveMulti);
     this.router.delete(`${this.path}/delete`,authMiddleware,this.delete);
     this.router.post(`${this.path}/updateDeleteFlagData`,authMiddleware,this.updateDeleteFlagData);
+    this.router.get(`${this.path}/all`,authMiddleware,this.getAllWithoutPagination);
   }
 
+  protected getAllWithoutPagination = async (req: Request,res: Response) => {
+  try {
+    const records = await this.service.getAllWithoutPagination();
+
+      this.sendResponse(
+        req,
+        res,
+        StatusCode.SUCCESS,
+        "Fetched successfully",
+        records,
+        records.length
+      );
+  } catch (error) {
+    this.sendError(res, error);
+  }
+};
 
   protected prepareParams(param: Pagination, req: Request): Pagination {
     param.pageNumber = req.body.pageNumber ?? 0;

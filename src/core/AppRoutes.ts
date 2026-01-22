@@ -3,7 +3,9 @@ export enum APP_ROUTES {
  REGISTER='/user/register',
  USER='/users',
  SECURITY='/security',
- ORDERS='/orders'
+ ORDERS='/orders',
+ COUNTRY="/country",
+ USER_AUTH_PROVIDER="/user-auth-provider"
 }
 
 export enum SUCCESSMSG {

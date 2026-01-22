@@ -8,6 +8,8 @@ import { UserController } from "./controller/UserController";
 import { SecurityController } from "./controller/SecurityController";
 import { APP_ROUTES } from "./core/AppRoutes";
 import { OrderController } from "./controller/OrderController";
+import { CountryController } from "./controller/CountryController";
+import { UserAuthProviderController } from "./controller/UserAuthProviderController";
 
 (async function bootstrap() {
   try {
@@ -17,6 +19,8 @@ import { OrderController } from "./controller/OrderController";
       new UserController(APP_ROUTES.USER),
       new SecurityController(),
       new OrderController(APP_ROUTES.ORDERS),
+      new CountryController(APP_ROUTES.COUNTRY),
+      new UserAuthProviderController(APP_ROUTES.USER_AUTH_PROVIDER)
     ]);
 
     app.listen();

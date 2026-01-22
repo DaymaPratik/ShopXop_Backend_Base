@@ -1,13 +1,11 @@
-
-export class UserManagmentModel {
-  first_name: string = "";
-  last_name?: string;
-  name: string = "";
+export class UserManagementModel {
+  user_name: string = "";
   email: string = "";
-  password: string = "";
-  role_id: number;
-  phone:string='';
-  otp?: string;
-  new_password?: string;
-  number_of_orders?:number;
+  mobile_number: string = "";
+  profile_image?: string;
+  user_type: string = "USER";
+  status: string = "ACTIVE";
+  city: string = "";
+  zip_code: string = "";
+  country_id!: string;
 }

@@ -3,67 +3,115 @@ import {
   IsString,
   IsEmail,
   Matches,
-  Length,
   IsOptional,
-  IsNumber,
+  IsEnum,
+  Length
 } from "class-validator";
 import { Transform } from "class-transformer";
+import { UserStatus, UserType } from "../../../entity/UserEntity";
 
 export class UserDto {
-@IsOptional()
-id:string;
 
-  @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
-  @IsString()
-  @IsNotEmpty({ message: "First Name is required" })
-  @Length(3, 100)
   @IsOptional()
-  first_name!: string;
+  id?: string;
 
-  @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
-  @IsOptional()
+  @Transform(({ value }) => value?.trim())
   @IsString()
-  last_name?: string;
+  @IsNotEmpty({ message: "User name is required" })
+  user_name!: string;
 
-  @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
+  @Transform(({ value }) => value?.trim())
   @IsEmail({}, { message: "Invalid email address" })
   @IsNotEmpty()
-  @IsOptional()
   email!: string;
 
-  @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
+  @Transform(({ value }) => value?.trim())
   @IsString()
-  @IsNotEmpty({ message: "Phone number is required" })
   @Matches(/^[6-9]\d{9}$/, {
-    message: "Phone number must be a valid 10-digit Indian number",
+    message: "Mobile number must be a valid 10-digit Indian number",
   })
+  mobile_number!: string;
+
   @IsOptional()
-  phone!: string;
+  @IsString()
+  profile_image?: string;
+
+  @IsEnum(UserType)
+  user_type!: UserType;
+
+  @IsEnum(UserStatus)
+  status!: UserStatus;
 
   @IsString()
   @IsNotEmpty()
-  @Length(8, 30)
-  @IsOptional()
-  password!: string;
+  city!: string;
 
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
-  @IsOptional()
-  role_id!: number;
+  zip_code!: string;
 
-  @IsNumber()
-  @IsOptional()
-  number_of_orders!: number;
+  @IsString()
+  country_id!: string;
+}
+
+
+
+export class RegisterUserDto {
+  @IsString()
+  user_name: string;
+
+  @IsEmail()
+  email: string;
+
+  @IsString()
+  mobile_number: string;
 
   @IsOptional()
   @IsString()
-  @Length(6, 6, { message: "OTP must be 6 digits" })
-  otp?: string;
+  password?: string;
 
   @IsOptional()
+  provider?: string;
+
+  @IsOptional()
+  provider_user_id?: string;
+
+  @IsOptional()
+  access_token?: string;
+
   @IsString()
+  city: string;
+
+  @IsString()
+  zip_code: string;
+
+  @IsString()
+  country_id: string; 
+
+   @IsOptional()
+  @IsString()
+  profile_image?: string;
+
+   @IsEnum(UserType)
+  user_type!: UserType;
+
+   @IsEnum(UserStatus)
+  status!: UserStatus;
+}
+
+
+
+export class LoginUserDto {
+
+  @Transform(({ value }) => value?.trim())
+  @IsEmail({}, { message: "Invalid email address" })
+  @IsNotEmpty({ message: "Email is required" })
+  email!: string;
+
+  @IsString()
+  @IsNotEmpty({ message: "Password is required" })
   @Length(8, 30, {
-    message: "New password must be between 8 and 30 characters",
+    message: "Password must be between 8 and 30 characters",
   })
-  new_password?: string;
+  password!: string;
 }

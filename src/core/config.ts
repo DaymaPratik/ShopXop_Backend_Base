@@ -18,7 +18,7 @@ export const PORT: number = Number(process.env.PORT) || 4420;
 export const PATH = "/shopxop/api";
 
 
-export const ENABLE_ENCRYPTION = false;
+export const ENABLE_ENCRYPTION = true;
 export const ENCRYPTION_SECRET_KEY =
   process.env.ENCRYPTION_SECRET_KEY || "ShopXop@2025";
 export const SALT_ROUNDS = Number(process.env.SALT_ROUNDS) || 10;
