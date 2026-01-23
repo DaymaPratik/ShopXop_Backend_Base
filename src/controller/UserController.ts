@@ -7,11 +7,7 @@ import { GenericResponse } from "../core/GenericResponse";
 import { StatusCode, ResponseStatus } from "../core/config";
 import { validationMiddleware } from "../middlewares/validationMiddleware";
 import { RegisterUserDto, UserDto } from "../databse/repository/user/user.dto";
-// import { FacebookOAuth } from "./FBOAuthController";
-// import { EncryptionAndDecryption } from "../core/EncryptionAndDecryption";
-// import crypto from "crypto";
-// import { createjwt } from "../core/jwt";
-// import { createjwt } from "../core/";
+
 
 export class UserController extends BaseController<UserService> {
   constructor(
