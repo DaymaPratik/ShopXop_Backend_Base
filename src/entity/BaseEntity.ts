@@ -1,28 +1,3 @@
-// import {
-//   ObjectIdColumn,
-//   Column,
-//   CreateDateColumn,
-//   UpdateDateColumn,
-// } from "typeorm";
-// import { ObjectId } from "mongodb";
-
-// export abstract class BaseEntity {
-//   @ObjectIdColumn()
-//   _id: ObjectId;
-
-//   @Column({ default: 0 })
-//   is_deleted: number;
-
-//   @CreateDateColumn()
-//   created_at: Date;
-
-//   @UpdateDateColumn()
-//   modified_at: Date;
-
-
-
-
-// }
 import {
   ObjectIdColumn,
   Column,
@@ -37,7 +12,7 @@ export abstract class BaseEntity {
   _id: ObjectId;
 
   @Column({ default: 0 })
-  is_deleted: number;
+  is_deleted: number=0
 
   @CreateDateColumn({ name: "created_at" })
   created_at: Date;

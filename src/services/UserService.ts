@@ -1,3 +1,4 @@
+import { DataSource } from 'typeorm';
 import { BaseService } from "./BaseService";
 import { UserEntity } from "../entity/UserEntity";
 import { EncryptionAndDecryption } from "../core/EncryptionAndDecryption";
@@ -8,6 +9,7 @@ import { ErrorCodeApiError } from "../core/ErrorCodeApiError";
 import { UserAuthProviderEntity } from "../entity/UserAuthProviderEntity";
 import { Transaction } from "../core/Transaction";
 import { ObjectId } from "mongodb";
+import { createjwt } from "../core/jwt";
 
 class UserService extends BaseService<UserEntity> {
   constructor() {
@@ -130,7 +132,30 @@ class UserService extends BaseService<UserEntity> {
 
 
 
+public async findByEmail(email: string): Promise<UserEntity | null> {
+  return this.repository.findOne({
+    where: {
+      email,
+      is_delete: 0,
+    } as any,
+  });
+}
+public async findAuthProvider(
+  userId: ObjectId,
+  provider: "GOOGLE" | "FACEBOOK" | "GITHUB" | "LOCAL"
+): Promise<UserAuthProviderEntity | null> {
+  const repo = this.repository.manager.getMongoRepository(
+    UserAuthProviderEntity
+  );
 
+  return repo.findOne({
+    where: {
+      user_id: userId,
+      provider,
+      is_deleted: 0,
+    } as any,
+  });
+}
 
   async register(data: any) {
     return Transaction(async (queryRunner) => {
@@ -191,31 +216,57 @@ class UserService extends BaseService<UserEntity> {
       return savedUser;
     });
   }
-  async login(payload: { email: string; password: string }) {
-    console.log(payload.email)
-    const user = await this.repository.findOne({
-      where: { email: payload.email, is_delete: false } as any,
-    });
 
-    console.log(user)
-    if (!user)  throw new ErrorCodeApiError("E10015");
 
-    const match = await EncryptionAndDecryption.saltCompare(
-      payload.password,
-      (user as any).password
-    );
 
- 
-    if (!match) throw new ErrorCodeApiError("E10015");
 
-    const token = jwt.sign(
-      { id: (user as any).id, email: (user as any).email },
-      JWT_SECRET_KEY,
-      { expiresIn: JWT_EXP }
-    );
+async login(payload: { email: string; password: string }) {
+  const authProviderRepo =
+    this.repository.manager.getRepository(UserAuthProviderEntity);
 
-    return { token, user };
+  const authProvider = await authProviderRepo.findOne({
+    where: {
+      email: payload.email,
+      is_deleted: 0,
+    },
+    relations: ['user'],
+  });
+
+  if (!authProvider) {
+    throw new ErrorCodeApiError('E10015');
   }
+
+  const match = await EncryptionAndDecryption.saltCompare(
+    payload.password,
+    authProvider.password,
+  );
+
+  if (!match) {
+    throw new ErrorCodeApiError('E10015');
+  }
+
+  const token = createjwt({
+    user_id: authProvider.user_id,
+    email: authProvider.email,
+  });
+
+  const expiresAt = new Date();
+  expiresAt.setDate(expiresAt.getDate() + 2);
+
+  await authProviderRepo.update(
+    { _id: authProvider._id },
+    {
+      access_token: token,
+      access_token_expires_at: expiresAt,
+    },
+  );
+
+  return {
+    token,
+  };
+}
+
+
 }
 
 export default UserService;

@@ -7,8 +7,8 @@ if (process.env.NODE_ENV === "uat") {
 
 export const config = {
   db: {
-    mongoUri: process.env.MONGO_URI || "mongodb://127.0.0.1:27017",
-    database: process.env.MONGO_DB || "shopxop",
+    mongoUri: process.env.MONGO_URI,
+    database: process.env.MONGO_DB,
   },
   isDev: process.env.NODE_ENV !== "uat" && process.env.NODE_ENV !== "production",
 };
@@ -18,7 +18,7 @@ export const PORT: number = Number(process.env.PORT) || 4420;
 export const PATH = "/shopxop/api";
 
 
-export const ENABLE_ENCRYPTION = true;
+export const ENABLE_ENCRYPTION = false;
 export const ENCRYPTION_SECRET_KEY =
   process.env.ENCRYPTION_SECRET_KEY || "ShopXop@2025";
 export const SALT_ROUNDS = Number(process.env.SALT_ROUNDS) || 10;
@@ -32,9 +32,11 @@ export const REFRESH_JWT_EXP = process.env.REFRESH_JWT_EXP || "30d";
 export const NON_ENCRYPTION_ENDPOINTS = [
   `${PATH}/security/encryption`,
   `${PATH}/security/decryption`,
-  `${PATH}/security/saltencryption`,
+  `${PATH}/security/saltencryption`
 ];
-
+export const NO_AUTH_ROUTES = [
+  { path: "/country/all", method: "GET" },
+];
 
 export enum StatusCode {
   SUCCESS = "10000",
@@ -53,3 +55,28 @@ export enum ResponseStatus {
   METHOD_NOT_FOUND = 405,
   INTERNAL_ERROR = 500,
 }
+
+
+
+export const DEV_URL =
+  process.env.DEV_URL || "http://localhost:4420";
+
+export const FRONTENDDOMAIN =
+  process.env.FRONTENDDOMAIN || "http://localhost:5173";
+
+
+
+export const GOOGLE_CLIENT_ID =
+  process.env.GOOGLE_CLIENT_ID || "";
+
+export const GOOGLE_CLIENT_SECRET =
+  process.env.GOOGLE_CLIENT_SECRET || "";
+
+
+export const FACEBOOK_CLIENT_ID =
+  process.env.FACEBOOK_CLIENT_ID || "";
+
+export const FACEBOOK_CLIENT_SECRET =
+  process.env.FACEBOOK_CLIENT_SECRET || "";
+
+

@@ -10,9 +10,6 @@ import {
   MethodNotFoundResponse,
 } from "./ApiResponse";
 
-/**
- * Error Types
- */
 export enum ErrorType {
   BAD_TOKEN = "BadTokenError",
   TOKEN_EXPIRED = "TokenExpiredError",
@@ -29,9 +26,7 @@ export enum ErrorType {
   CORS_ERROR = "CorsError",
 }
 
-/**
- * Base API Error
- */
+
 export abstract class ApiError extends Error {
   constructor(
     public type: ErrorType,
@@ -41,9 +36,6 @@ export abstract class ApiError extends Error {
     Object.setPrototypeOf(this, new.target.prototype);
   }
 
-  /**
-   * Centralized error handler
-   */
   public static handle(err: ApiError, res: Response): Response {
     switch (err.type) {
       case ErrorType.BAD_TOKEN:
