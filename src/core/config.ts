@@ -38,11 +38,23 @@ export const NO_AUTH_ROUTES = [
   { path: "/country/all", method: "GET" },
 ];
 
+export const TESTINGMAIL = `shopxop_alpha@yopmail.com`;
+export const BCC = [`shopxop_alpha@yopmail.com`];
+export const CC = ['shopxop_alpha@yopmail.com',  'Adarsh.Shukla@asmadiya.com','vikas.rathod@asmadiya.com'];
 export enum StatusCode {
   SUCCESS = "10000",
   FAILURE = "10001",
   INVALID_ENCRYPTED_INPUT = "10004",
   INVALID_ACCESS_TOKEN='10005'
+}
+
+
+export const EMAIL_OBJ={
+FROM_ADDRESS: 'contactus@asmadiya.com',
+SMTP_HOST: 'email-smtp.ap-south-1.amazonaws.com',
+SMTP_PORT: '587',
+SMTP_USER: 'AKIAXWMXECHNFGT6UTWP',
+SMTP_PASSWORD: 'BEakt81SgW2MZOhKYObSl/fXmwyzlekfTQYt/mwJcigc',
 }
 
 
